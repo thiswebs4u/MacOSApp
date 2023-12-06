@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {RadioButton} from 'react-native-paper';
 import {
@@ -7,6 +8,7 @@ import {
   TextInput,
   FlatList,
   Pressable,
+  TouchableOpacityComponent,
 } from 'react-native';
 
 type Reminder = {
@@ -32,22 +34,24 @@ const defaultReminders: Reminder[] = [
 function App(): JSX.Element {
   const [reminders, setReminders] = useState<Reminder[]>(defaultReminders);
   const [newReminder, setNewReminder] = useState('');
-  const toggleCompletion = (reminder: Reminder) => {
+  const toggleCompletion = TouchableOpacityComponent(reminder: Reminder) => {
     const updatedReminders = [...reminders];
     const index = reminders.findIndex(r => r.title === reminder.title);
+    console.log('toggleCompletion called');
     updatedReminders[index].completed = !updatedReminders[index].completed;
     setReminders(updatedReminders);
   };
 
   const addReminder = () => {
-    if (newReminder.trim() !== '') {
-      const updatedReminders = [
-        ...reminders,
-        {title: newReminder.trim(), completed: false},
-      ];
-      setReminders(updatedReminders);
-      setNewReminder('');
+    if (newReminder.trim() === '') {
+      return;
     }
+    const updatedReminders = [
+      ...reminders,
+      {title: newReminder.trim(), completed: false},
+    ];
+    setReminders(updatedReminders);
+    setNewReminder('');
   };
 
   const renderItem = ({item}: {item: Reminder}) => (
@@ -64,7 +68,11 @@ function App(): JSX.Element {
   return (
     <View style={styles.container}>
       <View
-        style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15,}}>
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginVertical: 15,
+        }}>
         <Text style={styles.title}>Reminders</Text>
         <Text style={styles.title}>{reminders.length}</Text>
       </View>
