@@ -32,16 +32,15 @@ const defaultReminders: Reminder[] = [
 function App(): JSX.Element {
   const [reminders, setReminders] = useState<Reminder[]>(defaultReminders);
   const [newReminder, setNewReminder] = useState('');
-  const sortedReminders = [...reminders].sort((a, b) => a.completed - b.completed);
   const toggleCompletion = (reminder: Reminder) => {
     const updatedReminders = [...reminders];
-    const index = reminders.findIndex(r=>r.title === reminder.title);
+    const index = reminders.findIndex(r => r.title === reminder.title);
     updatedReminders[index].completed = !updatedReminders[index].completed;
     setReminders(updatedReminders);
   };
 
   const addReminder = () => {
-    if (newReminder.trim() === '') {
+    if (newReminder.trim() !== '') {
       const updatedReminders = [
         ...reminders,
         {title: newReminder.trim(), completed: false},
@@ -51,8 +50,8 @@ function App(): JSX.Element {
     }
   };
 
-  const renderItem = ({item, index}: {item: Reminder; index: number}) => (
-    <Pressable onPress={() => toggleCompletion(index)} style={styles.item}>
+  const renderItem = ({item}: {item: Reminder}) => (
+    <Pressable onPress={() => toggleCompletion(item)} style={styles.item}>
       <RadioButton
         value={item.title}
         status={item.completed ? 'checked' : 'unchecked'}
@@ -65,16 +64,15 @@ function App(): JSX.Element {
   return (
     <View style={styles.container}>
       <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginVertical: 15,
-        }}>
+        style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 15,}}>
         <Text style={styles.title}>Reminders</Text>
         <Text style={styles.title}>{reminders.length}</Text>
       </View>
-      <FlatList data={reminders} renderItem={renderItem} />;
-<TextInput
+      <FlatList
+        data={[...reminders].sort((a, b) => (a === b ? 0 : a ? 1 : -1))}
+        renderItem={renderItem}
+      />
+      <TextInput
         style={styles.input}
         onChangeText={setNewReminder}
         value={newReminder}
