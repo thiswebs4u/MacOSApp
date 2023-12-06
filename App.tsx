@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {RadioButton} from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   StyleSheet,
   Text,
@@ -9,14 +8,6 @@ import {
   FlatList,
   Pressable,
 } from 'react-native';
-
-const storeData = async (value) => {
-  try {
-    await AsyncStorage.setItem('my-key', value);
-  } catch (e) {
-    // saving error
-  }
-};
 
 type Reminder = {
   title: string;
@@ -83,7 +74,7 @@ function App(): JSX.Element {
         <Text style={styles.title}>{reminders.length}</Text>
       </View>
       <FlatList data={reminders} renderItem={renderItem} />;
-      <TextInput
+<TextInput
         style={styles.input}
         onChangeText={setNewReminder}
         value={newReminder}
